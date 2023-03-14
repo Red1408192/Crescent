@@ -1,5 +1,5 @@
-#include "FontManager.h"
-#include <Windows.h>
+#include "Headers/FontManager.h"
+#include <SFML/Window.hpp>
 
 sf::Font FontManager::GetFont()
 {

@@ -1,14 +1,14 @@
+#include "Scene.cpp"
+#include "Object.cpp"
+#include "ObjectFactory.cpp"
+#include "FontManager.cpp"
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <SFML/System.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Scene.h"
-#include "Object.h"
-#include "ObjectFactory.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "FontManager.h"
 #include <iostream>
 #include <thread>
 #include <mutex>
@@ -81,11 +81,6 @@ int main()
             {
                 std::string input = inputQueue.front();
                 inputQueue.pop();
-                if (input.starts_with("Add"))
-                {
-                    input = input.substr(4, input.size() - 4);
-
-                }
             }
             if (event.type == sf::Event::Closed)
             {
@@ -99,7 +94,10 @@ int main()
             if (event.key.code == sf::Keyboard::R) scene.DistanceCamera(0.01);
             if (event.key.code == sf::Keyboard::F) scene.DistanceCamera(-0.01);
 
-            if (event.key.code == sf::Keyboard::W) scene.MoveCameraPos(glm::vec3(0, 0, 1));
+            if (event.key.control == sf::Keyboard::W)
+            {
+                scene.MoveCameraPos(glm::vec3(0, 0, 1));
+            }
             if (event.key.code == sf::Keyboard::A) scene.MoveCameraPos(glm::vec3(1, 0, 0));
             if (event.key.code == sf::Keyboard::S) scene.MoveCameraPos(glm::vec3(0, 0, -1));
             if (event.key.code == sf::Keyboard::D) scene.MoveCameraPos(glm::vec3(-1, 0, 0));
@@ -134,7 +132,7 @@ int main()
 
         window.draw(scene.ProjectObjects(mode, sf::Color::White));
 
-        if(showIndexes) for(auto const i : scene.ProjectObjectsVertexIndex(sf::Color::Color(40, 40, 40), font)) window.draw(i);
+        if(showIndexes) for(auto const i : scene.ProjectObjectsVertexIndex(sf::Color(40, 40, 40), font)) window.draw(i);
         window.display();
 
 

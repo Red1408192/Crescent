@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/vec3.hpp>
-#include <Vector>
+#include <vector>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <glm/gtc/quaternion.hpp>

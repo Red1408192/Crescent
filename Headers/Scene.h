@@ -1,5 +1,5 @@
 #pragma once
-#include <Vector>
+#include <vector>
 #include <SFML/Graphics/VertexArray.hpp>
 #include "Object.h"
 #include <glm/gtc/quaternion.hpp>

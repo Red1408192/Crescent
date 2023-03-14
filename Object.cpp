@@ -1,4 +1,4 @@
-#include "Object.h"
+#include "Headers/Object.h"
 Object::Object(glm::vec3 position, std::string name)
 {
 	this->CenterPosition = position;

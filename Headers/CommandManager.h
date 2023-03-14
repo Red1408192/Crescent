@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-static class CommandManager
+class CommandManager
 {
 public:
 	static const char* Add;

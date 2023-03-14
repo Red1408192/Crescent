@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "Headers/Scene.h"
 
 Scene::Scene(float width, float height)
 {
@@ -70,7 +70,7 @@ sf::VertexArray Scene::GetGrid()
 	for (auto ver : Grid)
 	{
 		auto point = GetMvp() * glm::vec4(ver, 1.f);
-		result.append(sf::Vertex(sf::Vector2f(point.x, point.y), sf::Color::Color(50, 50, 50)));
+		result.append(sf::Vertex(sf::Vector2f(point.x, point.y), sf::Color(50, 50, 50)));
 	}
 	return result;
 }
