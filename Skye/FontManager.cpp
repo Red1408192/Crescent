@@ -4,6 +4,6 @@
 sf::Font FontManager::GetFont()
 {
     auto font = sf::Font();
-    font.loadFromFile("./BOOKOS.TTF");
+    font.loadFromFile("./Resources/BOOKOS.TTF");
     return font;
 }

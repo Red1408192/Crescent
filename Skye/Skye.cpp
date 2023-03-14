@@ -87,41 +87,41 @@ int main()
                 window.close();
             }
 
-            if (event.key.code == sf::Keyboard::I) scene.OrbitCamera(0.01, 0);
-            if (event.key.code == sf::Keyboard::J) scene.OrbitCamera(0, -0.01);
-            if (event.key.code == sf::Keyboard::K) scene.OrbitCamera(-0.01, 0);
-            if (event.key.code == sf::Keyboard::L) scene.OrbitCamera(0, 0.01);
-            if (event.key.code == sf::Keyboard::R) scene.DistanceCamera(0.01);
-            if (event.key.code == sf::Keyboard::F) scene.DistanceCamera(-0.01);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) scene.OrbitCamera(0.01, 0);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) scene.OrbitCamera(0, -0.01);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) scene.OrbitCamera(-0.01, 0);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) scene.OrbitCamera(0, 0.01);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) scene.DistanceCamera(0.01);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) scene.DistanceCamera(-0.01);
 
             if (event.key.control == sf::Keyboard::W)
             {
                 scene.MoveCameraPos(glm::vec3(0, 0, 1));
             }
-            if (event.key.code == sf::Keyboard::A) scene.MoveCameraPos(glm::vec3(1, 0, 0));
-            if (event.key.code == sf::Keyboard::S) scene.MoveCameraPos(glm::vec3(0, 0, -1));
-            if (event.key.code == sf::Keyboard::D) scene.MoveCameraPos(glm::vec3(-1, 0, 0));
-            if (event.key.code == sf::Keyboard::Q) scene.MoveCameraPos(glm::vec3(0, 1, 0));
-            if (event.key.code == sf::Keyboard::E) scene.MoveCameraPos(glm::vec3(0, -1, 0));
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) scene.MoveCameraPos(glm::vec3(1, 0, 0));
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) scene.MoveCameraPos(glm::vec3(0, 0, -1));
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) scene.MoveCameraPos(glm::vec3(-1, 0, 0));
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) scene.MoveCameraPos(glm::vec3(0, 1, 0));
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) scene.MoveCameraPos(glm::vec3(0, -1, 0));
 
-            if (event.key.code == sf::Keyboard::Add) scene.ScaleFov(-1);
-            if (event.key.code == sf::Keyboard::Subtract) scene.ScaleFov(1);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)) scene.ScaleFov(-1);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract)) scene.ScaleFov(1);
 
 
             auto elapsed = Gridclock.getElapsedTime();
-            if (elapsed > sf::milliseconds(500) && event.key.code == sf::Keyboard::G)
+            if (elapsed > sf::milliseconds(500) && sf::Keyboard::isKeyPressed(sf::Keyboard::G))
             {
                 Gridclock.restart();
                 showGrid = !showGrid;
             }
             auto elapsed2 = DrawModeclock.getElapsedTime();
-            if (elapsed2 > sf::milliseconds(500) && event.key.code == sf::Keyboard::T)
+            if (elapsed2 > sf::milliseconds(500) && sf::Keyboard::isKeyPressed(sf::Keyboard::T))
             {
                 DrawModeclock.restart();
                 mode = static_cast<DrawMode>((mode + 1) % 3);
             }
             auto elapsed3 = Indexeslock.getElapsedTime();
-            if (elapsed3 > sf::milliseconds(500) && event.key.code == sf::Keyboard::H)
+            if (elapsed3 > sf::milliseconds(500) && sf::Keyboard::isKeyPressed(sf::Keyboard::H))
             {
                 Indexeslock.restart();
                 showIndexes = !showIndexes;
