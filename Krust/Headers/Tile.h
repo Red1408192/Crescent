@@ -1,9 +1,11 @@
 #pragma once
 
 struct Tile{
-    Tile::Tile(int weight, int height);
+    Tile(int xPos, int yPos, unsigned int weight, unsigned int height);
+    Tile();
+    int x;
+    int y;
 
-    int Identifier;
-    int Weight;
-    int Height;
+    unsigned int Weight;
+    unsigned int Height;
 };
