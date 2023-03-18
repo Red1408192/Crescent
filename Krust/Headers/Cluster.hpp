@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Tile.h"
+#include "Tile.hpp"
 
 class Cluster{
     private:
