@@ -1,11 +1,25 @@
 #pragma once
 #include <vector>
 #include "Tile.hpp"
+#include "../FastNoiseLite.h"
+#include <glm/glm.hpp>
+#define OUT
 
 class Cluster{
     private:
     public:
-        int Identifier;
-        std::vector<Tile*> MemberTiles;
-        Tile* CenterTile;
+    Cluster(int Identifier, int centerX, int centerY, FastNoiseLite noise, bool terrestial);
+    Cluster();
+    int Identifier;
+    FastNoiseLite Noise;
+    int CenterX;
+    int CenterY;
+    bool Terrestial;
+
+    float FindShortestPath(Tile start, int mapWidth);
+    float FindShortestPath(int startX, int startY, int mapWidth);
+    float FindShortestPath(glm::vec2 start, int mapWidth);
+    double GetDistance(glm::vec2 start, int mapWidth, OUT bool inverted);
+    double GetDistance(int startX, int startY, int mapWidth, OUT bool inverted);
+    double GetDistance(Tile start, int mapWidth, OUT bool inverted);
 };
