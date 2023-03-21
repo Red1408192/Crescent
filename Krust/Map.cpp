@@ -48,7 +48,7 @@ Map::Map(int width, int height, int continents, int maxWeight, int seed):
                 for (size_t x = 0; x < width; x++)
                 {
 
-                    Matrix[y][x] = Tile(x, y, 50.*(1.5+noise.GetNoise((float)x, (float)y))/2);
+                    Matrix[y][x] = Tile(x, y, 400.); //*(1.+noise.GetNoise((float)x, (float)y))/4
                     int currentShortestIndex = 21;
                     int currentSSecondIndex = 21;
 
@@ -65,16 +65,19 @@ Map::Map(int width, int height, int continents, int maxWeight, int seed):
                             currentShortest = h;
                         }
                     }
-                    if(Continents[currentShortestIndex].Terrestial) Matrix[y][x].Height *= 20;
-                    if(Continents[currentShortestIndex].Terrestial && Continents[currentSecondShortest].Terrestial){
+                    if(Continents[currentShortestIndex].Terrestial) Matrix[y][x].Height *= 4;
+                    if(Continents[currentShortestIndex].Terrestial == Continents[currentSSecondIndex].Terrestial){
                         auto delta = currentSecondShortest - currentShortest;
                         auto heightFactor = (((log10(delta)+1.)/3.)+.3)*2;
                         Matrix[y][x].Height *= heightFactor;
+                        if(Matrix[y][x].Height > 4000) Matrix[y][x].Height = 4000;
                     }
                     else{
                         auto delta = currentSecondShortest - currentShortest;
                         auto heightFactor = (pow(delta, -3.)+1.);
+                        auto heightFactor = (delta)/(pow(delta, delta) + (1000)/(4*delta));
                         Matrix[y][x].Height *= heightFactor;
+                        if(Matrix[y][x].Height < 0) Matrix[y][x].Height = 0;
                     }
                     Matrix[y][x].ClusterIndex = currentShortestIndex;
                 }
