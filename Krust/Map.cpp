@@ -7,6 +7,8 @@
 #include "FastNoiseLite.h"
 #include "Headers/Cardinals.hpp"
 #include <map>
+#include <future>
+#include <queue>
 
 Map::Map(int width, int height, int continents, int maxWeight, int seed):
     Matrix(height, std::vector<Tile>(width)),
@@ -16,7 +18,6 @@ Map::Map(int width, int height, int continents, int maxWeight, int seed):
     Seed(seed)
     {
         srand(seed);
-        int currentContinentIndex = 0;
 
         for (size_t i = 0; i < continents; i++)
         {
@@ -29,7 +30,7 @@ Map::Map(int width, int height, int continents, int maxWeight, int seed):
             noise.SetFractalOctaves(6);
             noise.SetFractalLacunarity(2.6f);
             noise.SetFractalGain(0.5f);
-            Continents[i] = Cluster(i,(rand()+10)%(height-10), (rand()+10)%(height-10), noise, terrestial);
+            Continents[i] = Cluster(i,(rand()+10)%(width-10), (rand()+10)%(height-10), noise, terrestial);
         }
         FastNoiseLite noise(Seed);
         noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
@@ -38,41 +39,51 @@ Map::Map(int width, int height, int continents, int maxWeight, int seed):
         noise.SetFractalOctaves(6);
         noise.SetFractalLacunarity(2.6f);
         noise.SetFractalGain(0.5f);
+
+        std::queue<std::future<void>> q;
+
         for (size_t y = 0; y < height; y++)
         {
-            for (size_t x = 0; x < width; x++)
-            {
+            q.emplace(std::async(std::launch::async, [&](size_t y){
+                for (size_t x = 0; x < width; x++)
+                {
 
-                Matrix[y][x] = Tile(x, y, 50.*(1.5+noise.GetNoise((float)x, (float)y))/2);
-                int currentShortestIndex = 21;
-                int currentSSecondIndex = 21;
+                    Matrix[y][x] = Tile(x, y, 50.*(1.5+noise.GetNoise((float)x, (float)y))/2);
+                    int currentShortestIndex = 21;
+                    int currentSSecondIndex = 21;
 
-                int currentShortest = __INT_MAX__;
-                int currentSecondShortest = __INT_MAX__;
+                    int currentShortest = __INT_MAX__;
+                    int currentSecondShortest = __INT_MAX__;
 
-                for (size_t i = 0; i < continents; i++){
-                    auto h = Continents[i].FindShortestPath(Matrix[y][x], width);
+                    for (size_t i = 0; i < continents; i++){
+                        auto h = Continents[i].FindShortestPath(Matrix[y][x], width);
 
-                    if(currentShortest > h){
-                        currentSSecondIndex = currentShortestIndex;
-                        currentShortestIndex = i;
-                        currentSecondShortest = currentShortest;
-                        currentShortest = h;
+                        if(currentShortest > h){
+                            currentSSecondIndex = currentShortestIndex;
+                            currentShortestIndex = i;
+                            currentSecondShortest = currentShortest;
+                            currentShortest = h;
+                        }
                     }
+                    if(Continents[currentShortestIndex].Terrestial) Matrix[y][x].Height *= 20;
+                    if(Continents[currentShortestIndex].Terrestial && Continents[currentSecondShortest].Terrestial){
+                        auto delta = currentSecondShortest - currentShortest;
+                        auto heightFactor = (((log10(delta)+1.)/3.)+.3)*2;
+                        Matrix[y][x].Height *= heightFactor;
+                    }
+                    else{
+                        auto delta = currentSecondShortest - currentShortest;
+                        auto heightFactor = (pow(delta, -3.)+1.);
+                        Matrix[y][x].Height *= heightFactor;
+                    }
+                    Matrix[y][x].ClusterIndex = currentShortestIndex;
                 }
-                if(Continents[currentContinentIndex].Terrestial) Matrix[y][x].Height *= 20;
-                if(Continents[currentContinentIndex].Terrestial && Continents[currentSecondShortest].Terrestial){
-                    auto delta = currentSecondShortest - currentShortest;
-                    auto heightFactor = (((log10(delta)+1.)/3.)+.3)*2;
-                    Matrix[y][x].Height *= heightFactor;
-                }
-                else{
-                    auto delta = currentSecondShortest - currentShortest;
-                    auto heightFactor = (pow(delta, -3.)+1.);
-                    Matrix[y][x].Height *= heightFactor;
-                }
-                Matrix[y][x].ClusterIndex = currentShortestIndex;
-            }
+            }, y));
+        }
+
+        while(!q.empty()){
+            q.front().get();
+            q.pop();
         }
     };
     Tile* Map::GetNorth(Tile* tile){

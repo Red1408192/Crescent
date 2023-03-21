@@ -19,7 +19,7 @@ class Cluster{
     float FindShortestPath(Tile start, int mapWidth);
     float FindShortestPath(int startX, int startY, int mapWidth);
     float FindShortestPath(glm::vec2 start, int mapWidth);
-    double GetDistance(glm::vec2 start, int mapWidth, OUT bool inverted);
-    double GetDistance(int startX, int startY, int mapWidth, OUT bool inverted);
-    double GetDistance(Tile start, int mapWidth, OUT bool inverted);
+    double GetDistance(glm::vec2 start, int mapWidth, OUT char inverted);
+    double GetDistance(int startX, int startY, int mapWidth, OUT char inverted);
+    double GetDistance(Tile start, int mapWidth, OUT char inverted);
 };

@@ -25,5 +25,6 @@ public:
     Tile* GetNorthWest(Tile* tile);
     Tile* GetSouthEast(Tile* tile);
     Tile* GetSouthWest(Tile* tile);
+    void CalculateRow(size_t y, int width, int continents, std::vector<std::vector<Tile>>& Matrix, std::vector<Cluster>& Continents, FastNoiseLite& noise);
 private:
 };

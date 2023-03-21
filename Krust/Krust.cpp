@@ -34,7 +34,7 @@ std::map<int, Pixel> TileColors
 };
 
 int main(){
-    auto map = Map(kWindowWidth, kWindowHeight, 20, 200, 8989);
+    auto map = Map(kWindowWidth, kWindowHeight, 20, 200, 694149);
     Bitmap image;
     std::vector<std::vector<Pixel>> bmp(kWindowHeight, std::vector<Pixel>(kWindowWidth));
     Pixel rgb;
@@ -45,9 +45,9 @@ int main(){
             auto tile = map.Matrix[c][r];
             bmp[c][r] = TileColors[tile.ClusterIndex];
             auto tileHeight = map.Matrix[c][r].Height;
-            bmp[c][r].blue = static_cast<char>(bmp[c][r].blue *(.3 + tileHeight/1000.));
-            bmp[c][r].red = static_cast<char>(bmp[c][r].red * (.3 + tileHeight/1000.));
-            bmp[c][r].green = static_cast<char>(bmp[c][r].green * (.3 + tileHeight/1000.));
+            bmp[c][r].blue = static_cast<int>(bmp[c][r].blue *(tileHeight * (1./4000.)));
+            bmp[c][r].red = static_cast<int>(bmp[c][r].red * (tileHeight * (1./4000.)));
+            bmp[c][r].green = static_cast<int>(bmp[c][r].green * (tileHeight * (1./4000.)));
         }
     }
     image.fromPixelMatrix(bmp);

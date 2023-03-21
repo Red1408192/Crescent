@@ -30,9 +30,10 @@ float Cluster::FindShortestPath(int startX, int startY, int mapWidth){
 }
 
 float Cluster::FindShortestPath(glm::vec2 start, int mapWidth){
-    auto inverted = false;
+    auto inverted = 0;
     auto distance = static_cast<float>(GetDistance(start, mapWidth, inverted));
-    if(inverted) start.x += mapWidth;
+    if(inverted == 1) start.x += mapWidth;
+    if(inverted == 2) start.x -= mapWidth;
     glm::vec2 delta = start - glm::vec2(CenterX, CenterY);
     float angle = atan2(delta.y, delta.x);
     float noise = Noise.GetNoise(static_cast<float>(40 * cos(angle)),static_cast<float>(40 * sin(angle)), 0.0f);
@@ -40,25 +41,30 @@ float Cluster::FindShortestPath(glm::vec2 start, int mapWidth){
     return distance * weightValue;
 }
 
-double Cluster::GetDistance(Tile start, int mapWidth, OUT bool inverted){
+double Cluster::GetDistance(Tile start, int mapWidth, OUT char inverted){
     return GetDistance(glm::vec2(start.x, start.y), mapWidth, inverted);
 }
 
-double Cluster::GetDistance(int startX, int startY, int mapWidth, OUT bool inverted){
+double Cluster::GetDistance(int startX, int startY, int mapWidth, OUT char inverted){
     return GetDistance(glm::vec2(startX, startY), mapWidth, inverted);
 }
 
-double Cluster::GetDistance(glm::vec2 start, int mapWidth, OUT bool inverted){
+double Cluster::GetDistance(glm::vec2 start, int mapWidth, OUT char inverted){
     double dx = start.x - CenterX;
     double dy = start.y - CenterY;
     double d0 = std::sqrt(dx * dx + dy * dy);
     double d1 = std::sqrt((dx + mapWidth) * (dx + mapWidth) + dy * dy);
+    double d3 = std::sqrt((dx - mapWidth) * (dx - mapWidth) + dy * dy);
     if(d1 < d0){
-        inverted = true;
+        inverted = 1;
         return d1;
     }
+    else if(d3 < d0){
+        inverted = 2;
+        return d3;
+    }
     else{
-        inverted = false;
+        inverted = 0;
         return d0;
     }
 }
