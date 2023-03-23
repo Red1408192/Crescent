@@ -8,7 +8,7 @@
 class Cluster{
     private:
     public:
-    Cluster(int Identifier, int centerX, int centerY, FastNoiseLite noise, bool terrestial);
+    Cluster(int Identifier, int centerX, int centerY, int seed, bool terrestial);
     Cluster();
     int Identifier;
     FastNoiseLite Noise;

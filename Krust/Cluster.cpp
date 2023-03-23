@@ -2,14 +2,20 @@
 #include <vector>
 #include "FastNoiseLite.h"
 
-Cluster::Cluster(int identifier, int centerX, int centerY, FastNoiseLite noise, bool terrestial):
+Cluster::Cluster(int identifier, int centerX, int centerY, int seed, bool terrestial):
     CenterX(centerX),
     CenterY(centerY),
     Identifier(identifier),
-    Noise(noise),
     Terrestial(terrestial)
     {
-        
+        FastNoiseLite noise(seed);
+        noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+        noise.SetFractalType(FastNoiseLite::FractalType_FBm);
+        noise.SetFrequency(0.010);
+        noise.SetFractalGain(0.7f);
+        noise.SetFractalOctaves(6);
+        noise.SetFractalLacunarity(1.9f);
+        Noise = noise;
     }
 
 Cluster::Cluster():
@@ -37,7 +43,7 @@ float Cluster::FindShortestPath(glm::vec2 start, int mapWidth){
     glm::vec2 delta = start - glm::vec2(CenterX, CenterY);
     float angle = atan2(delta.y, delta.x);
     float noise = Noise.GetNoise(static_cast<float>(40 * cos(angle)),static_cast<float>(40 * sin(angle)), 0.0f);
-    auto weightValue = (1.0f + (noise / 3));
+    auto weightValue = (1.0f + (noise / 6));
     return distance * weightValue;
 }
 

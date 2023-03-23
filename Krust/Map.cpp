@@ -22,15 +22,7 @@ Map::Map(int width, int height, int continents, int maxWeight, int seed):
         for (size_t i = 0; i < continents; i++)
         {
             bool terrestial = rand()%2==0;
-
-            FastNoiseLite noise(Seed+i);
-            noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-            noise.SetFrequency(0.018f);
-            noise.SetFractalType(FastNoiseLite::FractalType_FBm);
-            noise.SetFractalOctaves(6);
-            noise.SetFractalLacunarity(2.6f);
-            noise.SetFractalGain(0.5f);
-            Continents[i] = Cluster(i,(rand()+10)%(width-10), (rand()+10)%(height-10), noise, terrestial);
+            Continents[i] = Cluster(i,(rand()+10)%(width-10), (rand()+10)%(height-10), seed+i, terrestial);
         }
         FastNoiseLite noise(Seed);
         noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
@@ -75,7 +67,6 @@ Map::Map(int width, int height, int continents, int maxWeight, int seed):
                     else{
                         auto delta = currentSecondShortest - currentShortest;
                         auto heightFactor = (pow(delta, -3.)+1.);
-                        auto heightFactor = (delta)/(pow(delta, delta) + (1000)/(4*delta));
                         Matrix[y][x].Height *= heightFactor;
                         if(Matrix[y][x].Height < 0) Matrix[y][x].Height = 0;
                     }

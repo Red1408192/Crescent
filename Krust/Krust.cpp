@@ -1,6 +1,8 @@
 #include "Map.cpp"
 #include "bitmap.cpp"
 #include <vector>
+#include <gtk/gtk.h>
+#include <future>
 
 constexpr int kWindowWidth = 1920;
 constexpr int kWindowHeight = 1080;
@@ -33,21 +35,43 @@ std::map<int, Pixel> TileColors
     {21, Pixel(0, 0, 0)},
 };
 
-int main(){
+int EvaluatePixel(int original, double height){
+    auto newValue = static_cast<int>(original *(height * (1./4000.)));
+    newValue = std::max(newValue, 0);
+    newValue = std::min(newValue, 255);
+    return newValue;
+}
+static void activate (GtkApplication* app, gpointer user_data)
+{
+  GtkWidget *window;
+
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Krust");
+  gtk_window_set_default_size (GTK_WINDOW (window), kWindowWidth, kWindowHeight);
+  gtk_widget_show (window);
+}
+int main(int argc, char **argv){
     auto map = Map(kWindowWidth, kWindowHeight, 20, 200, 694149);
     Bitmap image;
     std::vector<std::vector<Pixel>> bmp(kWindowHeight, std::vector<Pixel>(kWindowWidth));
     Pixel rgb;
+
+    GtkApplication *app;
+    int status;
+    app = gtk_application_new ("org.gtk.Krust", G_APPLICATION_DEFAULT_FLAGS);
+    g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+    status = g_application_run (G_APPLICATION (app), argc, argv);
+    g_object_unref (app);
+
     for (size_t c = 0; c < kWindowHeight; c++)
     {
         for (size_t r = 0; r < kWindowWidth; r++)
         {
             auto tile = map.Matrix[c][r];
             bmp[c][r] = TileColors[tile.ClusterIndex];
-            auto tileHeight = map.Matrix[c][r].Height;
-            bmp[c][r].blue = static_cast<int>(bmp[c][r].blue *(tileHeight * (1./4000.)));
-            bmp[c][r].red = static_cast<int>(bmp[c][r].red * (tileHeight * (1./4000.)));
-            bmp[c][r].green = static_cast<int>(bmp[c][r].green * (tileHeight * (1./4000.)));
+            bmp[c][r].blue = EvaluatePixel(bmp[c][r].blue, map.Matrix[c][r].Height);
+            bmp[c][r].red = EvaluatePixel(bmp[c][r].red, map.Matrix[c][r].Height);
+            bmp[c][r].green = EvaluatePixel(bmp[c][r].green, map.Matrix[c][r].Height);
         }
     }
     image.fromPixelMatrix(bmp);
