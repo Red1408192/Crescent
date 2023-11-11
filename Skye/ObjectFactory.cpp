@@ -42,7 +42,7 @@ Object ObjectFactory::CreateCube(std::string name)
     cube.AddPlane(3, 7, 4);
 
     cube.AddPlane(4, 5, 1);
-    cube.AddPlane(1, 0, 4);
+    cube.AddPlane(1, 0, 4); 
 
     cube.AddPlane(7, 2, 3);
     cube.AddPlane(2, 7, 6);

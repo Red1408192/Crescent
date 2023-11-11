@@ -35,6 +35,24 @@ std::map<int, Pixel> TileColors
     {21, Pixel(0, 0, 0)},
 };
 
+gboolean draw_callback (GtkWidget *widget, cairo_t *cr, gpointer data)
+{
+    guint width, height;
+    GdkRGBA color;
+    GtkStyleContext *context;
+    
+    context = gtk_widget_get_style_context (widget);
+    width = gtk_widget_get_allocated_width (widget);
+    height = gtk_widget_get_allocated_height (widget);
+    gtk_render_background(context, cr, 0, 0, width, height);
+    cairo_arc (cr, width/2.0, height/2.0, MIN (width, height) / 2.0, 0, 2 * G_PI);
+    gtk_style_context_get_color (context, &color);
+    gdk_cairo_set_source_rgba (cr, &color);
+    gdk_cairo_set_source_rgba (cr, &color);
+    cairo_fill (cr);
+    return FALSE;
+}
+
 int EvaluatePixel(int original, double height){
     auto newValue = static_cast<int>(original *(height * (1./4000.)));
     newValue = std::max(newValue, 0);
